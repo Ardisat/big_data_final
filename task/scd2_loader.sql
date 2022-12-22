@@ -79,18 +79,14 @@ values ('p3', 'XXXX_scd2_source', to_timestamp('1900-01-01', 'YYYY-MM-DD'));
 -- 2 этап
 -- захват данных из источника в stage-слой (оптимизировали) (кроме удалений)
 insert into p3.XXXX_scd2_stg (id, val, update_dt) 
-    select 
-        id,
-        val,
-        update_dt
-    from p3.XXXX_scd2_source
-    where update_dt > (select last_update_dt from p3.XXXX_scd2_meta where schema_name = 'p3' and table_name = 'XXXX_scd2_source');
+select id, val, update_dt from p3.XXXX_scd2_source
+where update_dt > (select last_update_dt from p3.XXXX_scd2_meta where schema_name = 'p3' and table_name = 'XXXX_scd2_source');
  
 -- 3 этап   
 -- Захват ключей для вычисления удаленных записей
 insert into p3.XXXX_scd2_stg_del (id)
 select id from p3.XXXX_scd2_source;
-    
+     
 
 -- 4 этап
 -- Запись данных в детальный слой

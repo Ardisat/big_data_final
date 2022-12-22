@@ -1,6 +1,0 @@
-CREATE TABLE IF NOT EXISTS "p3"."ENV_DWH_FACT_PASSPORT_BLACKLIST" (
-    "passport_num" varchar(255) NOT NULL,
-    "entry_dt" DATE NOT NULL
-) WITH (
-  OIDS=FALSE
-);
