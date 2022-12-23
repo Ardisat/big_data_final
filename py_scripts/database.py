@@ -19,11 +19,7 @@ class DataBase:
     def post(self, sql):
         with self.__connection.cursor() as cursor:
             cursor.execute(sql)
-
-
-    def postmany(self, sql, data):
-        with self.__connection.cursor() as cursor:
-            cursor.executemany(sql, data)
+            cursor.execute('commit;')
 
 
     def __del__(self):

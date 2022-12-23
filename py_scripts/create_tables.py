@@ -1,6 +1,15 @@
 def create_tables(db, sql_folder_name):
-    path = f"{sql_folder_name}/stg_tables.sql"
+    tables_to_create = [
+        "/stg_tables.sql",
+        "/fact_tables.sql",
+        "/hist_tables.sql",
+        "/fraud_table.sql",
+        "/meta_table.sql"
+    ]
 
-    with open(path) as file:
-        sql = file.read()
-        db.post(sql)
+    for file_name in tables_to_create:
+        path = f"{sql_folder_name}/{file_name}"
+
+        with open(path) as file:
+            sql = file.read()
+            db.post(sql)

@@ -24,8 +24,8 @@ create table p3.XXXX_scd2_stg_del(
     id integer
 );
 
-drop table p3.XXXX_scd2_target;
-create table p3.XXXX_scd2_target(
+drop table p3.XXXX_scd2_hist;
+create table p3.XXXX_scd2_hist(
     id integer,
     val varchar(50),
     effective_from timestamp(0),
@@ -56,10 +56,10 @@ delete from p3.XXXX_scd2_source where id = 4;
 select * from p3.XXXX_scd2_source;
 select * from p3.XXXX_scd2_stg;
 select * from p3.XXXX_scd2_stg_del;
-select * from p3.XXXX_scd2_target;
+select * from p3.XXXX_scd2_hist;
 select * from p3.XXXX_scd2_meta;
 
-delete from p3.XXXX_scd2_target;
+delete from p3.XXXX_scd2_hist;
 delete from p3.XXXX_scd2_source;
 delete from p3.XXXX_scd2_meta;
 
@@ -90,19 +90,19 @@ select id from p3.XXXX_scd2_source;
 
 -- 4 этап
 -- Запись данных в детальный слой
-insert into p3.XXXX_scd2_target (id, val, effective_from)
+insert into p3.XXXX_scd2_hist (id, val, effective_from)
 select
     t1.id,
     t1.val,
     t1.update_dt
 from p3.XXXX_scd2_stg t1
-left join p3.XXXX_scd2_target t2
+left join p3.XXXX_scd2_hist t2
 on t1.id = t2.id
 where t2.id is null;
 
 -- 5 этап
 -- Обновление данных в детальном слое
-update p3.XXXX_scd2_target 
+update p3.XXXX_scd2_hist 
 set
     effective_to = upd.update_dt - interval '1 minute'
 from (
@@ -111,20 +111,20 @@ from (
         t1.val,
         t1.update_dt
     from p3.XXXX_scd2_stg t1
-    inner join p3.XXXX_scd2_target t2
+    inner join p3.XXXX_scd2_hist t2
     on t1.id = t2.id
     where 
         t1.val <> t2.val or (t1.val is null and t2.val is not null) or (t1.val is not null and t2.val is null)
 ) upd
-where XXXX_scd2_target.id = upd.id;
+where XXXX_scd2_hist.id = upd.id;
 
-insert into p3.XXXX_scd2_target (id, val, effective_from)
+insert into p3.XXXX_scd2_hist (id, val, effective_from)
 select
         t1.id,
         t1.val,
         t1.update_dt
 from p3.XXXX_scd2_stg t1
-inner join p3.XXXX_scd2_target t2
+inner join p3.XXXX_scd2_hist t2
 on t1.id = t2.id
 where 
   t1.val <> t2.val or (t1.val is null and t2.val is not null) or (t1.val is not null and t2.val is null);
@@ -134,19 +134,19 @@ where
 -- Удаленные записи:
  
 -- записываем удаленную запись 
-insert into p3.XXXX_scd2_target (id, val, effective_from, deleted_flg)
+insert into p3.XXXX_scd2_hist (id, val, effective_from, deleted_flg)
 select
 	    t1.id,
 	    t1.val,
 	    now(),
 	    'Y'
-from p3.XXXX_scd2_target t1
+from p3.XXXX_scd2_hist t1
 left join p3.XXXX_scd2_stg_del t2
 on t1.id = t2.id
 where t1.effective_to = to_timestamp('2999-12-31', 'YYYY-MM-DD') and t2.id is null and t1.deleted_flg = 'N';
 
 -- апдейтим старую запись (закрываем актуальность)
-update p3.XXXX_scd2_target  tgt
+update p3.XXXX_scd2_hist  tgt
 set
 	effective_to = now() - interval '1 minute'
 where 
@@ -156,7 +156,7 @@ where
 	and id in (
 			select
 			    t1.id
-			from p3.XXXX_scd2_target t1
+			from p3.XXXX_scd2_hist t1
 			left join p3.XXXX_scd2_stg_del t2
 			on t1.id = t2.id 
 			where t2.id is null );
