@@ -36,13 +36,13 @@ CREATE TABLE "p3"."ENV_STG_DEL_TRANSACTIONS" ("id" varchar(255) NOT NULL);
 
 
 DROP TABLE IF EXISTS "p3"."ENV_STG_ACCOUNTS";
-CREATE TABLE "p3"."ENV_STG_ACCOUNTS" AS SELECT * FROM bank.accounts;
+CREATE TABLE "p3"."ENV_STG_ACCOUNTS" AS SELECT account, valid_to, client FROM bank.accounts;
 
 DROP TABLE IF EXISTS "p3"."ENV_STG_CARDS";
-CREATE TABLE "p3"."ENV_STG_CARDS" AS SELECT * FROM bank.cards;
+CREATE TABLE "p3"."ENV_STG_CARDS" AS SELECT card_num, account FROM bank.cards;
 
 DROP TABLE IF EXISTS "p3"."ENV_STG_CLIENTS";
-CREATE TABLE "p3"."ENV_STG_CLIENTS" AS SELECT * FROM bank.clients;
+CREATE TABLE "p3"."ENV_STG_CLIENTS" AS SELECT client_id, last_name, first_name, patronymic, date_of_birth, passport_num, passport_valid_to, phone FROM bank.clients;
 
 
 DROP TABLE IF EXISTS "p3"."ENV_STG_DEL_ACCOUNTS";

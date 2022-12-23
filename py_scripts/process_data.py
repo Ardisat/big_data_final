@@ -28,9 +28,4 @@ def process_data(db, date):
             stg_table_fields,
             date
         )
-        print()
-        print(hist_sql)
-        print()
         db.post(hist_sql)
-
-    print()

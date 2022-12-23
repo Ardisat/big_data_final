@@ -26,15 +26,15 @@ TABLES = {
         },
         'ACCOUNTS': {
             'name': f'{SCHEME}."{PREFIX}_STG_ACCOUNTS"',
-            'fields': ['account', 'valid_to', 'client', 'create_dt', 'update_dt']
+            'fields': ['account', 'valid_to', 'client']
         },
         'CARDS': {
             'name': f'{SCHEME}."{PREFIX}_STG_CARDS"',
-            'fields': ['card_num', 'account', 'create_dt', 'update_dt']
+            'fields': ['card_num', 'account']
         },
         'CLIENTS': {
             'name': f'{SCHEME}."{PREFIX}_STG_CLIENTS"',
-            'fields': ['client_id', 'last_name', 'first_name', 'patronymic', 'date_of_birth', 'passport_num', 'passport_valid_to', 'phone', 'created_dt', 'update_dt']
+            'fields': ['client_id', 'last_name', 'first_name', 'patronymic', 'date_of_birth', 'passport_num', 'passport_valid_to', 'phone']
         }
     },
     'STG_DEL': {
@@ -77,7 +77,7 @@ TABLES = {
             'fields': ['terminal_id', 'terminal_type', 'terminal_city', 'terminal_address', 'effective_from', 'effective_to', 'deleted_flg']
         },
         'CLIENTS': {
-            'name': f'{SCHEME}."{PREFIX}_DWH_DIM_CLIENTS_HIST',
+            'name': f'{SCHEME}."{PREFIX}_DWH_DIM_CLIENTS_HIST"',
             'fields': ['client_id', 'last_name', 'first_name', 'patronymic', 'date_of_birth', 'passport_num', 'passport_valid_to', 'phone', 'effective_from', 'effective_to', 'deleted_flg']
         }
     }

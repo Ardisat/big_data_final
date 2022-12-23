@@ -12,8 +12,8 @@ DROP TABLE IF EXISTS "p3"."ENV_DWH_DIM_CARDS_HIST";
 CREATE TABLE "p3"."ENV_DWH_DIM_CARDS_HIST" (
   "card_num" varchar(255) NOT NULL,
   "account_num" varchar(255) NOT NULL,
-  "effective_from" timestamp(6),
-  "effective_to" timestamp(6),
+  "effective_from" timestamp(6) DEFAULT to_timestamp('1900-01-01'::text, 'YYYY-MM-DD'::text),
+  "effective_to" timestamp(6) NOT NULL DEFAULT to_timestamp('2999-12-31'::text, 'YYYY-MM-DD'::text),
   "deleted_flg" bool NOT NULL DEFAULT false
 );
 
