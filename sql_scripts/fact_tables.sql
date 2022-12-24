@@ -2,7 +2,7 @@ DROP TABLE IF EXISTS "p3"."ENV_DWH_FACT_TRANSACTIONS";
 CREATE TABLE "p3"."ENV_DWH_FACT_TRANSACTIONS" (
   "transaction_id" varchar(255) NOT NULL,
   "transaction_date" timestamp(6) NOT NULL,
-  "amount" numeric(255,0) NOT NULL,
+  "amount" DECIMAL NOT NULL,
   "card_num" varchar(255) NOT NULL,
   "oper_type" varchar(255) NOT NULL,
   "oper_result" varchar(255) NOT NULL,

@@ -5,6 +5,7 @@ from py_scripts.generate.generate_hist import generate_hist_sql
 from py_scripts.generate.generate_update_hist import generate_update_hist_sql
 from py_scripts.generate.generate_del import generate_del_sql
 from py_scripts.generate.generate_old_hist import generate_old_hist_sql
+from py_scripts.generate.generate_facts import generate_facts_sql
 
 
 def process_data(db, date):
@@ -91,9 +92,35 @@ def process_data(db, date):
         logs += update_hist_sql + '\n'
         logs += del_sql + '\n'
         logs += old_hist_sql + '\n'
-        logs += '\n\n\n\n\n'
+    print()
+
+    # Загрузка фактов
+    print('5. Загрузка фактов')
+    pb = Bar(len(TABLES['FACT']))
+
+    for table in TABLES['FACT']:
+
+        fact_id     = TABLES['FACT'][table]['fields'][0]
+        stg_id      = TABLES['STG'][table]['fields'][0]
+
+        fact_name   = TABLES['FACT'][table]['name']
+        stg_name    = TABLES['STG'][table]['name']
+
+        fact_fields = TABLES['FACT'][table]['fields']
+        stg_fields  = TABLES['STG'][table]['fields']
+
+        facts_sql = generate_facts_sql(
+            fact_name,
+            stg_name,
+            fact_fields,
+            stg_fields
+        )
+        db.post(facts_sql)
+        logs += facts_sql + '\n'
+        pb.next()
 
     print()
+
 
     # Записть логов в файл
     fname = "-".join(date.split('.'))

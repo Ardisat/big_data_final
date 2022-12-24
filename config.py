@@ -83,14 +83,24 @@ TABLES = {
     },
     'META': {
         'TABLE': {
-            'name': f'"{SCHEME}"."{PREFIX}"',
+            'name': f'"{SCHEME}"."{PREFIX}_META_TABLE"',
             'fields': ['scheme_name', 'table_name', 'last_update_dt']
         }
     },
     'REP': {
         'FRAUD': {
-            'name': f'"{SCHEME}"."{PREFIX}"',
+            'name': f'"{SCHEME}"."{PREFIX}_REP_FRAUD"',
             'fields': ['event_dt', 'passport', 'fio', 'phone', 'event_type', 'report_dt']
+        }
+    },
+    'FACT': {
+        'TRANSACTIONS': {
+            'name': f'"{SCHEME}"."{PREFIX}_DWH_FACT_TRANSACTIONS"',
+            'fields': ['transaction_id', 'transaction_date', 'card_num', 'oper_type', 'amount', 'oper_result', 'terminal']
+        },
+        'PASSPORT_BLACKLIST':{
+            'name': f'"{SCHEME}"."{PREFIX}_DWH_FACT_PASSPORT_BLACKLIST"',
+            'fields': ['passport_num', 'entry_dt']
         }
     }
 }

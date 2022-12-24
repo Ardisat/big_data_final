@@ -60,11 +60,6 @@ where
             where t2.account is null );
     
 
-
-
-
-
-
 INSERT INTO "p3"."ENV_DWH_DIM_CARDS_HIST" (card_num, account_num)
 SELECT t1.card_num, t1.account
 FROM "p3"."ENV_STG_CARDS" t1
@@ -117,11 +112,6 @@ where
             on t1.card_num = t2.card_num
             where t2.card_num is null );
     
-
-
-
-
-
 
 INSERT INTO "p3"."ENV_DWH_DIM_TERMINALS_HIST" (terminal_id, terminal_type, terminal_city, terminal_address)
 SELECT t1.terminal_id, t1.terminal_type, t1.terminal_city, t1.terminal_address
@@ -179,11 +169,6 @@ where
             on t1.terminal_id = t2.terminal_id
             where t2.terminal_id is null );
     
-
-
-
-
-
 
 INSERT INTO "p3"."ENV_DWH_DIM_CLIENTS_HIST" (client_id, last_name, first_name, patronymic, date_of_birth, passport_num, passport_valid_to, phone)
 SELECT t1.client_id, t1.last_name, t1.first_name, t1.patronymic, t1.date_of_birth, t1.passport_num, t1.passport_valid_to, t1.phone
@@ -250,7 +235,10 @@ where
             where t2.client_id is null );
     
 
+INSERT INTO "p3"."ENV_DWH_FACT_TRANSACTIONS" (transaction_id, transaction_date, card_num, oper_type, amount, oper_result, terminal)
+SELECT trans_id, trans_date, card_num, oper_type, amt, oper_result, terminal FROM "p3"."ENV_STG_TRANSACTIONS";
+    
 
-
-
-
+INSERT INTO "p3"."ENV_DWH_FACT_PASSPORT_BLACKLIST" (passport_num, entry_dt)
+SELECT passport_num, entry_dt FROM "p3"."ENV_STG_PASSPORT_BLACKLIST";
+    
