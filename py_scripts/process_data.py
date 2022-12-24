@@ -8,6 +8,8 @@ from py_scripts.generate.generate_old_hist import generate_old_hist_sql
 
 
 def process_data(db, date):
+    logs = ''
+
     # Захват ключей для вычисления удаленных записей
     print('2. Захват ключей для вычисления удаленных записей')
     pb = Bar(len(TABLES['STG_DEL']))
@@ -19,7 +21,9 @@ def process_data(db, date):
         stg_del_name = TABLES['STG_DEL'][table]['name']
         stg_name     = TABLES['STG'][table]['name']
 
-        db.post(f"INSERT INTO {stg_del_name} ({id}) select {stg_id} from {stg_name};")
+        sql = f"INSERT INTO {stg_del_name} ({id}) select {stg_id} from {stg_name};"
+        db.post(sql)
+        logs += sql + "\n"
         pb.next()
 
     print()
@@ -72,14 +76,24 @@ def process_data(db, date):
         db.post(del_sql)
 
         # Апдейтим старые записи (закрываем актуальность)
-        del_sql = generate_old_hist_sql(
+        old_hist_sql = generate_old_hist_sql(
             hist_table_name, 
             hist_table_fields, 
             stg_del_table_name,
             stg_del_table_fields
         )
-        db.post(del_sql)
+        db.post(old_hist_sql)
 
         pb.next()
+        logs += hist_sql + '\n'
+        logs += update_hist_sql + '\n'
+        logs += del_sql + '\n'
+        logs += old_hist_sql + '\n'
+        logs += '\n\n\n\n\n'
+
     print()
 
+    # Записть логов в файл
+    fname = "-".join(date.split('.'))
+    with open(f'sql_logs/{fname}.txt', 'w') as file:
+        file.write(logs)

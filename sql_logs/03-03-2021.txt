@@ -1,0 +1,36 @@
+
+
+        insert into "p3"."ENV_DWH_DIM_ACCOUNTS_HIST" (account_id, valid_to, client, effective_from, deleted_flg)
+        select t1.account_id, t1.valid_to, t1.client, now(), 'Y'
+        from "p3"."ENV_DWH_DIM_ACCOUNTS_HIST" t1
+        left join "p3"."ENV_STG_DEL_ACCOUNTS" t2
+        on t1.account_id = t2.id
+        where t1.effective_to = to_timestamp('2999-12-31', 'YYYY-MM-DD') and t2.id is null and t1.deleted_flg = 'N';
+    
+
+
+        insert into "p3"."ENV_DWH_DIM_CARDS_HIST" (card_num, account_num, effective_from, deleted_flg)
+        select t1.card_num, t1.account_num, now(), 'Y'
+        from "p3"."ENV_DWH_DIM_CARDS_HIST" t1
+        left join "p3"."ENV_STG_DEL_CARDS" t2
+        on t1.card_num = t2.id
+        where t1.effective_to = to_timestamp('2999-12-31', 'YYYY-MM-DD') and t2.id is null and t1.deleted_flg = 'N';
+    
+
+
+        insert into "p3"."ENV_DWH_DIM_TERMINALS_HIST" (terminal_id, terminal_type, terminal_city, terminal_address, effective_from, deleted_flg)
+        select t1.terminal_id, t1.terminal_type, t1.terminal_city, t1.terminal_address, now(), 'Y'
+        from "p3"."ENV_DWH_DIM_TERMINALS_HIST" t1
+        left join "p3"."ENV_STG_DEL_TERMINALS" t2
+        on t1.terminal_id = t2.id
+        where t1.effective_to = to_timestamp('2999-12-31', 'YYYY-MM-DD') and t2.id is null and t1.deleted_flg = 'N';
+    
+
+
+        insert into "p3"."ENV_DWH_DIM_CLIENTS_HIST" (client_id, last_name, first_name, patronymic, date_of_birth, passport_num, passport_valid_to, phone, effective_from, deleted_flg)
+        select t1.client_id, t1.last_name, t1.first_name, t1.patronymic, t1.date_of_birth, t1.passport_num, t1.passport_valid_to, t1.phone, now(), 'Y'
+        from "p3"."ENV_DWH_DIM_CLIENTS_HIST" t1
+        left join "p3"."ENV_STG_DEL_CLIENTS" t2
+        on t1.client_id = t2.id
+        where t1.effective_to = to_timestamp('2999-12-31', 'YYYY-MM-DD') and t2.id is null and t1.deleted_flg = 'N';
+    
