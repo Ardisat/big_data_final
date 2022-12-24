@@ -5,6 +5,8 @@ from py_scripts.generate.generate_insert import generate_sql
 
 
 def load_source_data(db, data_folder_name, date):
+    print('2. Загрузка данных из файлов в базу')
+
     filename = "".join(date.split('.'))                                                 # делаем имя файла из даты
 
     pbl_path  = f"{data_folder_name}/passport_blacklist_{filename}.xlsx"                # путь к passport blacklist
@@ -19,6 +21,7 @@ def load_source_data(db, data_folder_name, date):
     df['amount'] = df['amount'].map(comma2dot)
 
     load_to_db(db, df, TABLES['STG']['TRANSACTIONS']['name'])                           # загружаем данные transacions в базу
+    print()
 
 
 def load_to_db(db, df, table):                                                          # загрузка в базу сгенерированного sql

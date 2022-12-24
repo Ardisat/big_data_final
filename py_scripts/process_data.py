@@ -2,10 +2,14 @@ from config import *
 from py_scripts.generate.generate_hist import generate_hist_sql
 from py_scripts.generate.generate_update_hist import generate_update_hist_sql
 from py_scripts.generate.generate_del import generate_del_sql
+from Progress import Bar
 
 
 def process_data(db, date):
     # Захват ключей для вычисления удаленных записей
+    print('3. Захват ключей для вычисления удаленных записей')
+    pb = Bar(len(TABLES['STG_DEL']))
+
     for table in TABLES['STG_DEL']:
 
         id           = TABLES['STG_DEL'][table]['fields'][0]
@@ -14,7 +18,16 @@ def process_data(db, date):
         stg_name     = TABLES['STG'][table]['name']
 
         db.post(f"INSERT INTO {stg_del_name} ({id}) select {stg_id} from {stg_name};")
-    
+        pb.next()
+
+    print()
+    print(
+        '4. Запись данных в hist таблицы\n',
+        '  Обновление данных в детальном слое\n',
+        '  Записываем удаленные записи',
+        )
+    pb = Bar(len(TABLES['HIST']))
+
     for table in TABLES['HIST']:
         hist_table_name = TABLES['HIST'][table]['name']
         hist_table_fields = TABLES['HIST'][table]['fields']
@@ -53,3 +66,7 @@ def process_data(db, date):
             stg_del_table_fields
         )
         db.post(del_sql)
+
+        pb.next()
+
+    print()
