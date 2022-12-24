@@ -7,7 +7,7 @@ def create_tables(db, sql_folder_name):
         "/meta_table.sql"
     ]
 
-    print('1. Подготовка данных, очистка и создание таблиц')
+    print('0. Подготовка данных, очистка и создание таблиц')
 
     for file_name in tables_to_create:
         path = f"{sql_folder_name}/{file_name}"

@@ -20,6 +20,11 @@ def main():
     dates = ['01.03.2021', '02.03.2021', '03.03.2021']  
 
     for date in dates:
+        print('-'*50)
+        print()
+        print("Дата:", date)
+        print()
+
         load_source_data(db, 'data', date)  # загрузка данных их файлов в базу
         process_data(db, date)              # операции с данными внутри базы
  

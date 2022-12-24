@@ -5,7 +5,7 @@ from py_scripts.generate.generate_insert import generate_sql
 
 
 def load_source_data(db, data_folder_name, date):
-    print('2. Загрузка данных из файлов в базу')
+    print('1. Загрузка данных из файлов в базу')
 
     filename = "".join(date.split('.'))                                                 # делаем имя файла из даты
 

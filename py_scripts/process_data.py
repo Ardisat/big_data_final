@@ -9,7 +9,7 @@ from py_scripts.generate.generate_old_hist import generate_old_hist_sql
 
 def process_data(db, date):
     # Захват ключей для вычисления удаленных записей
-    print('3. Захват ключей для вычисления удаленных записей')
+    print('2. Захват ключей для вычисления удаленных записей')
     pb = Bar(len(TABLES['STG_DEL']))
 
     for table in TABLES['STG_DEL']:
@@ -24,7 +24,7 @@ def process_data(db, date):
 
     print()
     print(
-        '4. Запись данных в hist таблицы\n',
+        '3. Запись данных в hist таблицы\n',
         '  Обновление данных в детальном слое\n',
         '  Записываем удаленные записи\n',
         '  Апдейтим старые записи (закрываем актуальность)'
@@ -83,4 +83,3 @@ def process_data(db, date):
         pb.next()
     print()
 
-    
