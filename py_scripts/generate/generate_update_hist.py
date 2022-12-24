@@ -8,11 +8,13 @@ def generate_update_hist_sql(hist_table_name, hist_table_fields, stg_table_name,
     where = []
 
     for i in range(len(stg_table_fields)):
+        if i == 0:
+            continue
 
         stg_field = stg_table_fields[i]
         hist_field = hist_table_fields[i]
 
-        row = f"t1.{stg_field} <> t2.{hist_field} or (t1.{stg_field} is null and t2.{hist_field} is not null) or (t1.{stg_field} is not null and t2.{hist_field} is null)"
+        row = f"(t1.{stg_field} <> t2.{hist_field} or (t1.{stg_field} is null and t2.{hist_field} is not null) or (t1.{stg_field} is not null and t2.{hist_field} is null))"
         where.append(row)
 
     where = " or\n".join(where)

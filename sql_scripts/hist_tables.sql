@@ -5,7 +5,7 @@ CREATE TABLE "p3"."ENV_DWH_DIM_ACCOUNTS_HIST" (
   "client" varchar(255) NOT NULL,
   "effective_from" timestamp(6) DEFAULT to_timestamp('1901-01-01'::text, 'YYYY-MM-DD'::text),
   "effective_to" timestamp(6) DEFAULT to_timestamp('2999-12-31'::text, 'YYYY-MM-DD'::text),
-  "deleted_flg" bool NOT NULL DEFAULT false
+  "deleted_flg" char(1) default 'N'
 );
 
 DROP TABLE IF EXISTS "p3"."ENV_DWH_DIM_CARDS_HIST";
@@ -14,7 +14,7 @@ CREATE TABLE "p3"."ENV_DWH_DIM_CARDS_HIST" (
   "account_num" varchar(255) NOT NULL,
   "effective_from" timestamp(6) DEFAULT to_timestamp('1900-01-01'::text, 'YYYY-MM-DD'::text),
   "effective_to" timestamp(6) NOT NULL DEFAULT to_timestamp('2999-12-31'::text, 'YYYY-MM-DD'::text),
-  "deleted_flg" bool NOT NULL DEFAULT false
+  "deleted_flg" char(1) default 'N'
 );
 
 DROP TABLE IF EXISTS "p3"."ENV_DWH_DIM_TERMINALS_HIST";
@@ -25,7 +25,7 @@ CREATE TABLE "p3"."ENV_DWH_DIM_TERMINALS_HIST" (
   "terminal_address" varchar(255) NOT NULL,
   "effective_from" timestamp(6) DEFAULT to_timestamp('1900-01-01'::text, 'YYYY-MM-DD'::text),
   "effective_to" timestamp(6) NOT NULL DEFAULT to_timestamp('2999-12-31'::text, 'YYYY-MM-DD'::text),
-  "deleted_flg" bool NOT NULL DEFAULT false
+  "deleted_flg" char(1) default 'N'
 );
 
 DROP TABLE IF EXISTS "p3"."ENV_DWH_DIM_CLIENTS_HIST";
@@ -40,5 +40,5 @@ CREATE TABLE "p3"."ENV_DWH_DIM_CLIENTS_HIST" (
   "phone" varchar(255) NOT NULL,
   "effective_from" timestamp(6),
   "effective_to" timestamp(6) NOT NULL DEFAULT to_timestamp('2999-12-31'::text, 'YYYY-MM-DD'::text),
-  "deleted_flg" bool NOT NULL DEFAULT false
+  "deleted_flg" char(1) default 'N'
 );

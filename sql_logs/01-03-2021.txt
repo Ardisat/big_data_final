@@ -1,36 +1,256 @@
+INSERT INTO "p3"."ENV_STG_DEL_PASSPORT_BLACKLIST" (passport_num) select passport_num from "p3"."ENV_STG_PASSPORT_BLACKLIST";
+INSERT INTO "p3"."ENV_STG_DEL_TERMINALS" (terminal_id) select terminal_id from "p3"."ENV_STG_TERMINALS";
+INSERT INTO "p3"."ENV_STG_DEL_TRANSACTIONS" (trans_id) select trans_id from "p3"."ENV_STG_TRANSACTIONS";
+INSERT INTO "p3"."ENV_STG_DEL_ACCOUNTS" (account) select account from "p3"."ENV_STG_ACCOUNTS";
+INSERT INTO "p3"."ENV_STG_DEL_CARDS" (card_num) select card_num from "p3"."ENV_STG_CARDS";
+INSERT INTO "p3"."ENV_STG_DEL_CLIENTS" (client_id) select client_id from "p3"."ENV_STG_CLIENTS";
+
+INSERT INTO "p3"."ENV_DWH_DIM_ACCOUNTS_HIST" (account_id, valid_to, client, effective_from)
+SELECT t1.account, t1.valid_to, t1.client, '01.03.2021'
+FROM "p3"."ENV_STG_ACCOUNTS" t1
+LEFT JOIN "p3"."ENV_DWH_DIM_ACCOUNTS_HIST" t2
+on t1.account = t2.account_id
+where t2.account_id is null;
+    
+
+update "p3"."ENV_DWH_DIM_ACCOUNTS_HIST" 
+set
+    effective_to = TO_TIMESTAMP('01.03.2021', 'DD.MM.YYYY') - interval '1 minute'
+from ( 
+    select t1.account, t1.valid_to, t1.client, '01.03.2021'
+    from "p3"."ENV_STG_ACCOUNTS" t1
+    inner join "p3"."ENV_DWH_DIM_ACCOUNTS_HIST" t2
+    on t1.account = t2.account_id
+    where (t1.valid_to <> t2.valid_to or (t1.valid_to is null and t2.valid_to is not null) or (t1.valid_to is not null and t2.valid_to is null)) or
+(t1.client <> t2.client or (t1.client is null and t2.client is not null) or (t1.client is not null and t2.client is null))
+) upd
+where "p3"."ENV_DWH_DIM_ACCOUNTS_HIST".account_id = upd.account;
 
 
-        insert into "p3"."ENV_DWH_DIM_ACCOUNTS_HIST" (account_id, valid_to, client, effective_from, deleted_flg)
-        select t1.account_id, t1.valid_to, t1.client, now(), 'Y'
-        from "p3"."ENV_DWH_DIM_ACCOUNTS_HIST" t1
-        left join "p3"."ENV_STG_DEL_ACCOUNTS" t2
-        on t1.account_id = t2.id
-        where t1.effective_to = to_timestamp('2999-12-31', 'YYYY-MM-DD') and t2.id is null and t1.deleted_flg = 'N';
+insert into "p3"."ENV_DWH_DIM_ACCOUNTS_HIST" (account_id, valid_to, client, effective_from)
+select t1.account, t1.valid_to, t1.client, '01.03.2021'
+from "p3"."ENV_STG_ACCOUNTS" t1
+inner join "p3"."ENV_DWH_DIM_ACCOUNTS_HIST" t2
+on t1.account = t2.account_id
+where (t1.valid_to <> t2.valid_to or (t1.valid_to is null and t2.valid_to is not null) or (t1.valid_to is not null and t2.valid_to is null)) or
+(t1.client <> t2.client or (t1.client is null and t2.client is not null) or (t1.client is not null and t2.client is null));
+    
+
+insert into "p3"."ENV_DWH_DIM_ACCOUNTS_HIST" (account_id, valid_to, client, effective_from, deleted_flg)
+select t1.account_id, t1.valid_to, t1.client, TO_TIMESTAMP('01.03.2021', 'DD.MM.YYYY'), 'Y'
+from "p3"."ENV_DWH_DIM_ACCOUNTS_HIST" t1
+left join "p3"."ENV_STG_DEL_ACCOUNTS" t2
+on t1.account_id = t2.account
+where t1.effective_to = to_timestamp('2999-12-31', 'YYYY-MM-DD') and t2.account is null and t1.deleted_flg = 'N';
+    
+
+update "p3"."ENV_DWH_DIM_ACCOUNTS_HIST"  tgt
+set
+    effective_to = TO_TIMESTAMP('01.03.2021', 'DD.MM.YYYY') - interval '1 minute'
+where 
+    1=1
+    and effective_to = to_timestamp('2999-12-31', 'YYYY-MM-DD') 
+    and deleted_flg = 'N'
+    and account_id in (
+            select
+                t1.account_id
+            from "p3"."ENV_DWH_DIM_ACCOUNTS_HIST" t1
+            left join "p3"."ENV_STG_DEL_ACCOUNTS" t2
+            on t1.account_id = t2.account
+            where t2.account is null );
     
 
 
-        insert into "p3"."ENV_DWH_DIM_CARDS_HIST" (card_num, account_num, effective_from, deleted_flg)
-        select t1.card_num, t1.account_num, now(), 'Y'
-        from "p3"."ENV_DWH_DIM_CARDS_HIST" t1
-        left join "p3"."ENV_STG_DEL_CARDS" t2
-        on t1.card_num = t2.id
-        where t1.effective_to = to_timestamp('2999-12-31', 'YYYY-MM-DD') and t2.id is null and t1.deleted_flg = 'N';
+
+
+
+
+INSERT INTO "p3"."ENV_DWH_DIM_CARDS_HIST" (card_num, account_num, effective_from)
+SELECT t1.card_num, t1.account, '01.03.2021'
+FROM "p3"."ENV_STG_CARDS" t1
+LEFT JOIN "p3"."ENV_DWH_DIM_CARDS_HIST" t2
+on t1.card_num = t2.card_num
+where t2.card_num is null;
+    
+
+update "p3"."ENV_DWH_DIM_CARDS_HIST" 
+set
+    effective_to = TO_TIMESTAMP('01.03.2021', 'DD.MM.YYYY') - interval '1 minute'
+from ( 
+    select t1.card_num, t1.account, '01.03.2021'
+    from "p3"."ENV_STG_CARDS" t1
+    inner join "p3"."ENV_DWH_DIM_CARDS_HIST" t2
+    on t1.card_num = t2.card_num
+    where (t1.account <> t2.account_num or (t1.account is null and t2.account_num is not null) or (t1.account is not null and t2.account_num is null))
+) upd
+where "p3"."ENV_DWH_DIM_CARDS_HIST".card_num = upd.card_num;
+
+
+insert into "p3"."ENV_DWH_DIM_CARDS_HIST" (card_num, account_num, effective_from)
+select t1.card_num, t1.account, '01.03.2021'
+from "p3"."ENV_STG_CARDS" t1
+inner join "p3"."ENV_DWH_DIM_CARDS_HIST" t2
+on t1.card_num = t2.card_num
+where (t1.account <> t2.account_num or (t1.account is null and t2.account_num is not null) or (t1.account is not null and t2.account_num is null));
+    
+
+insert into "p3"."ENV_DWH_DIM_CARDS_HIST" (card_num, account_num, effective_from, deleted_flg)
+select t1.card_num, t1.account_num, TO_TIMESTAMP('01.03.2021', 'DD.MM.YYYY'), 'Y'
+from "p3"."ENV_DWH_DIM_CARDS_HIST" t1
+left join "p3"."ENV_STG_DEL_CARDS" t2
+on t1.card_num = t2.card_num
+where t1.effective_to = to_timestamp('2999-12-31', 'YYYY-MM-DD') and t2.card_num is null and t1.deleted_flg = 'N';
+    
+
+update "p3"."ENV_DWH_DIM_CARDS_HIST"  tgt
+set
+    effective_to = TO_TIMESTAMP('01.03.2021', 'DD.MM.YYYY') - interval '1 minute'
+where 
+    1=1
+    and effective_to = to_timestamp('2999-12-31', 'YYYY-MM-DD') 
+    and deleted_flg = 'N'
+    and card_num in (
+            select
+                t1.card_num
+            from "p3"."ENV_DWH_DIM_CARDS_HIST" t1
+            left join "p3"."ENV_STG_DEL_CARDS" t2
+            on t1.card_num = t2.card_num
+            where t2.card_num is null );
     
 
 
-        insert into "p3"."ENV_DWH_DIM_TERMINALS_HIST" (terminal_id, terminal_type, terminal_city, terminal_address, effective_from, deleted_flg)
-        select t1.terminal_id, t1.terminal_type, t1.terminal_city, t1.terminal_address, now(), 'Y'
-        from "p3"."ENV_DWH_DIM_TERMINALS_HIST" t1
-        left join "p3"."ENV_STG_DEL_TERMINALS" t2
-        on t1.terminal_id = t2.id
-        where t1.effective_to = to_timestamp('2999-12-31', 'YYYY-MM-DD') and t2.id is null and t1.deleted_flg = 'N';
+
+
+
+
+INSERT INTO "p3"."ENV_DWH_DIM_TERMINALS_HIST" (terminal_id, terminal_type, terminal_city, terminal_address, effective_from)
+SELECT t1.terminal_id, t1.terminal_type, t1.terminal_city, t1.terminal_address, '01.03.2021'
+FROM "p3"."ENV_STG_TERMINALS" t1
+LEFT JOIN "p3"."ENV_DWH_DIM_TERMINALS_HIST" t2
+on t1.terminal_id = t2.terminal_id
+where t2.terminal_id is null;
+    
+
+update "p3"."ENV_DWH_DIM_TERMINALS_HIST" 
+set
+    effective_to = TO_TIMESTAMP('01.03.2021', 'DD.MM.YYYY') - interval '1 minute'
+from ( 
+    select t1.terminal_id, t1.terminal_type, t1.terminal_city, t1.terminal_address, '01.03.2021'
+    from "p3"."ENV_STG_TERMINALS" t1
+    inner join "p3"."ENV_DWH_DIM_TERMINALS_HIST" t2
+    on t1.terminal_id = t2.terminal_id
+    where (t1.terminal_type <> t2.terminal_type or (t1.terminal_type is null and t2.terminal_type is not null) or (t1.terminal_type is not null and t2.terminal_type is null)) or
+(t1.terminal_city <> t2.terminal_city or (t1.terminal_city is null and t2.terminal_city is not null) or (t1.terminal_city is not null and t2.terminal_city is null)) or
+(t1.terminal_address <> t2.terminal_address or (t1.terminal_address is null and t2.terminal_address is not null) or (t1.terminal_address is not null and t2.terminal_address is null))
+) upd
+where "p3"."ENV_DWH_DIM_TERMINALS_HIST".terminal_id = upd.terminal_id;
+
+
+insert into "p3"."ENV_DWH_DIM_TERMINALS_HIST" (terminal_id, terminal_type, terminal_city, terminal_address, effective_from)
+select t1.terminal_id, t1.terminal_type, t1.terminal_city, t1.terminal_address, '01.03.2021'
+from "p3"."ENV_STG_TERMINALS" t1
+inner join "p3"."ENV_DWH_DIM_TERMINALS_HIST" t2
+on t1.terminal_id = t2.terminal_id
+where (t1.terminal_type <> t2.terminal_type or (t1.terminal_type is null and t2.terminal_type is not null) or (t1.terminal_type is not null and t2.terminal_type is null)) or
+(t1.terminal_city <> t2.terminal_city or (t1.terminal_city is null and t2.terminal_city is not null) or (t1.terminal_city is not null and t2.terminal_city is null)) or
+(t1.terminal_address <> t2.terminal_address or (t1.terminal_address is null and t2.terminal_address is not null) or (t1.terminal_address is not null and t2.terminal_address is null));
+    
+
+insert into "p3"."ENV_DWH_DIM_TERMINALS_HIST" (terminal_id, terminal_type, terminal_city, terminal_address, effective_from, deleted_flg)
+select t1.terminal_id, t1.terminal_type, t1.terminal_city, t1.terminal_address, TO_TIMESTAMP('01.03.2021', 'DD.MM.YYYY'), 'Y'
+from "p3"."ENV_DWH_DIM_TERMINALS_HIST" t1
+left join "p3"."ENV_STG_DEL_TERMINALS" t2
+on t1.terminal_id = t2.terminal_id
+where t1.effective_to = to_timestamp('2999-12-31', 'YYYY-MM-DD') and t2.terminal_id is null and t1.deleted_flg = 'N';
+    
+
+update "p3"."ENV_DWH_DIM_TERMINALS_HIST"  tgt
+set
+    effective_to = TO_TIMESTAMP('01.03.2021', 'DD.MM.YYYY') - interval '1 minute'
+where 
+    1=1
+    and effective_to = to_timestamp('2999-12-31', 'YYYY-MM-DD') 
+    and deleted_flg = 'N'
+    and terminal_id in (
+            select
+                t1.terminal_id
+            from "p3"."ENV_DWH_DIM_TERMINALS_HIST" t1
+            left join "p3"."ENV_STG_DEL_TERMINALS" t2
+            on t1.terminal_id = t2.terminal_id
+            where t2.terminal_id is null );
     
 
 
-        insert into "p3"."ENV_DWH_DIM_CLIENTS_HIST" (client_id, last_name, first_name, patronymic, date_of_birth, passport_num, passport_valid_to, phone, effective_from, deleted_flg)
-        select t1.client_id, t1.last_name, t1.first_name, t1.patronymic, t1.date_of_birth, t1.passport_num, t1.passport_valid_to, t1.phone, now(), 'Y'
-        from "p3"."ENV_DWH_DIM_CLIENTS_HIST" t1
-        left join "p3"."ENV_STG_DEL_CLIENTS" t2
-        on t1.client_id = t2.id
-        where t1.effective_to = to_timestamp('2999-12-31', 'YYYY-MM-DD') and t2.id is null and t1.deleted_flg = 'N';
+
+
+
+
+INSERT INTO "p3"."ENV_DWH_DIM_CLIENTS_HIST" (client_id, last_name, first_name, patronymic, date_of_birth, passport_num, passport_valid_to, phone, effective_from)
+SELECT t1.client_id, t1.last_name, t1.first_name, t1.patronymic, t1.date_of_birth, t1.passport_num, t1.passport_valid_to, t1.phone, '01.03.2021'
+FROM "p3"."ENV_STG_CLIENTS" t1
+LEFT JOIN "p3"."ENV_DWH_DIM_CLIENTS_HIST" t2
+on t1.client_id = t2.client_id
+where t2.client_id is null;
     
+
+update "p3"."ENV_DWH_DIM_CLIENTS_HIST" 
+set
+    effective_to = TO_TIMESTAMP('01.03.2021', 'DD.MM.YYYY') - interval '1 minute'
+from ( 
+    select t1.client_id, t1.last_name, t1.first_name, t1.patronymic, t1.date_of_birth, t1.passport_num, t1.passport_valid_to, t1.phone, '01.03.2021'
+    from "p3"."ENV_STG_CLIENTS" t1
+    inner join "p3"."ENV_DWH_DIM_CLIENTS_HIST" t2
+    on t1.client_id = t2.client_id
+    where (t1.last_name <> t2.last_name or (t1.last_name is null and t2.last_name is not null) or (t1.last_name is not null and t2.last_name is null)) or
+(t1.first_name <> t2.first_name or (t1.first_name is null and t2.first_name is not null) or (t1.first_name is not null and t2.first_name is null)) or
+(t1.patronymic <> t2.patronymic or (t1.patronymic is null and t2.patronymic is not null) or (t1.patronymic is not null and t2.patronymic is null)) or
+(t1.date_of_birth <> t2.date_of_birth or (t1.date_of_birth is null and t2.date_of_birth is not null) or (t1.date_of_birth is not null and t2.date_of_birth is null)) or
+(t1.passport_num <> t2.passport_num or (t1.passport_num is null and t2.passport_num is not null) or (t1.passport_num is not null and t2.passport_num is null)) or
+(t1.passport_valid_to <> t2.passport_valid_to or (t1.passport_valid_to is null and t2.passport_valid_to is not null) or (t1.passport_valid_to is not null and t2.passport_valid_to is null)) or
+(t1.phone <> t2.phone or (t1.phone is null and t2.phone is not null) or (t1.phone is not null and t2.phone is null))
+) upd
+where "p3"."ENV_DWH_DIM_CLIENTS_HIST".client_id = upd.client_id;
+
+
+insert into "p3"."ENV_DWH_DIM_CLIENTS_HIST" (client_id, last_name, first_name, patronymic, date_of_birth, passport_num, passport_valid_to, phone, effective_from)
+select t1.client_id, t1.last_name, t1.first_name, t1.patronymic, t1.date_of_birth, t1.passport_num, t1.passport_valid_to, t1.phone, '01.03.2021'
+from "p3"."ENV_STG_CLIENTS" t1
+inner join "p3"."ENV_DWH_DIM_CLIENTS_HIST" t2
+on t1.client_id = t2.client_id
+where (t1.last_name <> t2.last_name or (t1.last_name is null and t2.last_name is not null) or (t1.last_name is not null and t2.last_name is null)) or
+(t1.first_name <> t2.first_name or (t1.first_name is null and t2.first_name is not null) or (t1.first_name is not null and t2.first_name is null)) or
+(t1.patronymic <> t2.patronymic or (t1.patronymic is null and t2.patronymic is not null) or (t1.patronymic is not null and t2.patronymic is null)) or
+(t1.date_of_birth <> t2.date_of_birth or (t1.date_of_birth is null and t2.date_of_birth is not null) or (t1.date_of_birth is not null and t2.date_of_birth is null)) or
+(t1.passport_num <> t2.passport_num or (t1.passport_num is null and t2.passport_num is not null) or (t1.passport_num is not null and t2.passport_num is null)) or
+(t1.passport_valid_to <> t2.passport_valid_to or (t1.passport_valid_to is null and t2.passport_valid_to is not null) or (t1.passport_valid_to is not null and t2.passport_valid_to is null)) or
+(t1.phone <> t2.phone or (t1.phone is null and t2.phone is not null) or (t1.phone is not null and t2.phone is null));
+    
+
+insert into "p3"."ENV_DWH_DIM_CLIENTS_HIST" (client_id, last_name, first_name, patronymic, date_of_birth, passport_num, passport_valid_to, phone, effective_from, deleted_flg)
+select t1.client_id, t1.last_name, t1.first_name, t1.patronymic, t1.date_of_birth, t1.passport_num, t1.passport_valid_to, t1.phone, TO_TIMESTAMP('01.03.2021', 'DD.MM.YYYY'), 'Y'
+from "p3"."ENV_DWH_DIM_CLIENTS_HIST" t1
+left join "p3"."ENV_STG_DEL_CLIENTS" t2
+on t1.client_id = t2.client_id
+where t1.effective_to = to_timestamp('2999-12-31', 'YYYY-MM-DD') and t2.client_id is null and t1.deleted_flg = 'N';
+    
+
+update "p3"."ENV_DWH_DIM_CLIENTS_HIST"  tgt
+set
+    effective_to = TO_TIMESTAMP('01.03.2021', 'DD.MM.YYYY') - interval '1 minute'
+where 
+    1=1
+    and effective_to = to_timestamp('2999-12-31', 'YYYY-MM-DD') 
+    and deleted_flg = 'N'
+    and client_id in (
+            select
+                t1.client_id
+            from "p3"."ENV_DWH_DIM_CLIENTS_HIST" t1
+            left join "p3"."ENV_STG_DEL_CLIENTS" t2
+            on t1.client_id = t2.client_id
+            where t2.client_id is null );
+    
+
+
+
+
+

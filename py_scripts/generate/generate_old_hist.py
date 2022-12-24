@@ -1,4 +1,4 @@
-def generate_old_hist_sql(hist_table_name, hist_table_fields, stg_del_table_name, stg_del_table_fields):
+def generate_old_hist_sql(hist_table_name, hist_table_fields, stg_del_table_name, stg_del_table_fields, date):
 
     stg_del_id = stg_del_table_fields[0]
     hist_id = hist_table_fields[0]
@@ -6,7 +6,7 @@ def generate_old_hist_sql(hist_table_name, hist_table_fields, stg_del_table_name
     return f"""
 update {hist_table_name}  tgt
 set
-    effective_to = now() - interval '1 minute'
+    effective_to = TO_TIMESTAMP('{date}', 'DD.MM.YYYY') - interval '1 minute'
 where 
     1=1
     and effective_to = to_timestamp('2999-12-31', 'YYYY-MM-DD') 

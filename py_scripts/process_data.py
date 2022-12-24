@@ -71,7 +71,8 @@ def process_data(db, date):
             hist_table_name, 
             hist_table_fields, 
             stg_del_table_name,
-            stg_del_table_fields
+            stg_del_table_fields,
+            date
         )
         db.post(del_sql)
 
@@ -80,7 +81,8 @@ def process_data(db, date):
             hist_table_name, 
             hist_table_fields, 
             stg_del_table_name,
-            stg_del_table_fields
+            stg_del_table_fields,
+            date
         )
         db.post(old_hist_sql)
 

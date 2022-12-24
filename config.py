@@ -14,7 +14,7 @@ TABLES = {
     'STG': {
         'PASSPORT_BLACKLIST': {
             'name': f'"{SCHEME}"."{PREFIX}_STG_PASSPORT_BLACKLIST"',
-            'fields': ['entry_dt', 'passport_num']
+            'fields': ['passport_num', 'entry_dt']
         },
         'TERMINALS': {
             'name': f'"{SCHEME}"."{PREFIX}_STG_TERMINALS"',
@@ -40,27 +40,27 @@ TABLES = {
     'STG_DEL': {
         'PASSPORT_BLACKLIST': {
             'name': f'"{SCHEME}"."{PREFIX}_STG_DEL_PASSPORT_BLACKLIST"',
-            'fields': ['id']
+            'fields': ['passport_num']
         },
         'TERMINALS': {
             'name': f'"{SCHEME}"."{PREFIX}_STG_DEL_TERMINALS"',
-            'fields': ['id']
+            'fields': ['terminal_id']
         },
         'TRANSACTIONS': {
             'name': f'"{SCHEME}"."{PREFIX}_STG_DEL_TRANSACTIONS"',
-            'fields': ['id']
+            'fields': ['trans_id']
         },
         'ACCOUNTS': {
             'name': f'"{SCHEME}"."{PREFIX}_STG_DEL_ACCOUNTS"',
-            'fields': ['id']
+            'fields': ['account']
         },
         'CARDS': {
             'name': f'"{SCHEME}"."{PREFIX}_STG_DEL_CARDS"',
-            'fields': ['id']
+            'fields': ['card_num']
         },
         'CLIENTS': {
             'name': f'"{SCHEME}"."{PREFIX}_STG_DEL_CLIENTS"',
-            'fields': ['id']
+            'fields': ['client_id']
         }
     },
     'HIST': {
