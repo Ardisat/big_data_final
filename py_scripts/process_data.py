@@ -6,6 +6,7 @@ from py_scripts.generate.generate_update_hist import generate_update_hist_sql
 from py_scripts.generate.generate_del import generate_del_sql
 from py_scripts.generate.generate_old_hist import generate_old_hist_sql
 from py_scripts.generate.generate_facts import generate_facts_sql
+from py_scripts.generate.generate_meta import generate_meta_sql
 
 
 def process_data(db, date):
@@ -121,6 +122,45 @@ def process_data(db, date):
 
     print()
 
+    print('6. Обновление meta-данных')
+    pb = Bar(len(TABLES['FACT']) + len(TABLES['HIST']))
+
+
+    for table in TABLES['HIST']:
+        meta_table_name = TABLES['META']['TABLE']['name']
+        hist_table_name = TABLES['HIST'][table]['name']
+        stg_table_name  = TABLES['STG'][table]['name']
+
+        meta_sql = generate_meta_sql(
+            meta_table_name, 
+            hist_table_name, 
+            stg_table_name, 
+            SCHEME, 
+            "HIST", 
+            date
+        )
+
+        db.post(meta_sql)
+        pb.next()
+
+    for table in TABLES['FACT']:
+        meta_table_name = TABLES['META']['TABLE']['name']
+        hist_table_name = TABLES['FACT'][table]['name']
+        stg_table_name  = TABLES['STG'][table]['name']
+
+        meta_sql = generate_meta_sql(
+            meta_table_name, 
+            hist_table_name, 
+            stg_table_name, 
+            SCHEME, 
+            'FACT', 
+            date
+        )
+
+        db.post(meta_sql)
+        pb.next()
+
+    print()
 
     # Записть логов в файл
     fname = "-".join(date.split('.'))

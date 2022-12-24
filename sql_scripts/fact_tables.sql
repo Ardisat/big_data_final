@@ -14,3 +14,9 @@ CREATE TABLE "p3"."ENV_DWH_FACT_PASSPORT_BLACKLIST" (
   "entry_dt" date NOT NULL,
   "passport_num" varchar(255) NOT NULL
 );
+
+insert into "p3"."ENV_META_TABLE" (scheme_name, table_name, last_update_dt) 
+values ('p3', 'ENV_DWH_FACT_TRANSACTIONS', to_timestamp('1900-01-01', 'YYYY-MM-DD'));
+
+insert into "p3"."ENV_META_TABLE" (scheme_name, table_name, last_update_dt) 
+values ('p3', 'ENV_DWH_FACT_PASSPORT_BLACKLIST', to_timestamp('1900-01-01', 'YYYY-MM-DD'));

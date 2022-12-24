@@ -1,9 +1,9 @@
 def create_tables(db, sql_folder_name):
     tables_to_create = [
+        "/meta_table.sql",
         "/fact_tables.sql",
         "/hist_tables.sql",
-        "/fraud_table.sql",
-        "/meta_table.sql"
+        "/fraud_table.sql"
     ]
 
     print('0. Подготовка данных, очистка и создание таблиц')

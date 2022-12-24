@@ -42,3 +42,15 @@ CREATE TABLE "p3"."ENV_DWH_DIM_CLIENTS_HIST" (
   "effective_to" timestamp(6) NOT NULL DEFAULT to_timestamp('2999-12-31'::text, 'YYYY-MM-DD'::text),
   "deleted_flg" char(1) default 'N'
 );
+
+insert into "p3"."ENV_META_TABLE" (scheme_name, table_name, last_update_dt) 
+values ('p3', 'ENV_DWH_DIM_ACCOUNTS_HIST', to_timestamp('1900-01-01', 'YYYY-MM-DD'));
+
+insert into "p3"."ENV_META_TABLE" (scheme_name, table_name, last_update_dt) 
+values ('p3', 'ENV_DWH_DIM_CARDS_HIST', to_timestamp('1900-01-01', 'YYYY-MM-DD'));
+
+insert into "p3"."ENV_META_TABLE" (scheme_name, table_name, last_update_dt) 
+values ('p3', 'ENV_DWH_DIM_TERMINALS_HIST', to_timestamp('1900-01-01', 'YYYY-MM-DD'));
+
+insert into "p3"."ENV_META_TABLE" (scheme_name, table_name, last_update_dt) 
+values ('p3', 'ENV_DWH_DIM_CLIENTS_HIST', to_timestamp('1900-01-01', 'YYYY-MM-DD'));

@@ -1,25 +1,20 @@
-  update p3.tgss_meta
-  set last_update_dt = coalesce((select max(create_dt) from p3.tgss_stg_accounts), (select last_update_dt from p3.tgss_meta where schema = 'p3' and table_name = 'tgss_dwh_dim_accounts_hist'))
-  where schema = 'p3' and table_name = 'tgss_dwh_dim_accounts_hist';
+def generate_meta_sql(meta_table_name, h_table_name, stg_table_name, scheme, meta_type, date):
 
-   update p3.tgss_meta
-  set last_update_dt = coalesce((select max(create_dt) from p3.tgss_stg_cards), (select last_update_dt from p3.tgss_meta where schema = 'p3' and table_name = 'tgss_dwh_dim_cards_hist'))
-  where schema = 'p3' and table_name = 'tgss_dwh_dim_cards_hist';
-
-   update p3.tgss_meta
-  set last_update_dt = coalesce((select max(create_dt) from p3.tgss_stg_clients), (select last_update_dt from p3.tgss_meta where schema = 'p3' and table_name = 'tgss_dwh_dim_clients_hist'))
-  where schema = 'p3' and table_name = 'tgss_dwh_dim_clients_hist';
-
-    update p3.tgss_meta
-  set last_update_dt = coalesce((select max(effective_from) from p3.tgss_dwh_dim_terminals_hist), (select last_update_dt from p3.tgss_meta where schema = 'p3' and table_name = 'tgss_dwh_dim_terminals_hist'))
-  where schema = 'p3' and table_name = 'tgss_dwh_dim_terminals_hist';
-
-   update p3.tgss_meta
-  set last_update_dt = ( select max(entry_dt) from p3.tgss_stg_passport_blacklist )
-  where schema = 'p3' and table_name = 'tgss_dwh_fact_passport_blacklist' and ( select max(entry_dt) from p3.tgss_dwh_fact_passport_blacklist ) is not null;
-
-
-   update p3.tgss_meta
-  set last_update_dt = ( select max(transaction_date) from p3.tgss_stg_transactions )
-  where schema = 'p3' and table_name = 'tgss_dwh_fact_transactions' and ( select max(transaction_date) from p3.tgss_dwh_fact_transactions ) is not null;
-
+	table_name = h_table_name.replace(f'"{scheme}"."', '').replace('"', "")
+  
+	if meta_type == 'HIST':
+		sql = f"""
+update {meta_table_name}
+set last_update_dt = coalesce(
+	(select max(TO_TIMESTAMP('{date}', 'DD.MM.YYYY')) from {stg_table_name}), 
+	(select last_update_dt from {meta_table_name} where scheme_name = '{scheme}' and table_name = '{h_table_name}')
+)
+where scheme_name = '{scheme}' and table_name = '{table_name}';
+		"""
+	else:
+		sql = f"""
+update {meta_table_name}
+set last_update_dt = (select max(TO_TIMESTAMP('{date}', 'DD.MM.YYYY')) from {stg_table_name})
+where scheme_name = '{scheme}' and table_name = '{table_name}' and (select max('{date}') from {h_table_name}) is not null;
+    """
+	return sql
