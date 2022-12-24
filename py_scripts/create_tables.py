@@ -1,6 +1,5 @@
 def create_tables(db, sql_folder_name):
     tables_to_create = [
-        "/stg_tables.sql",
         "/fact_tables.sql",
         "/hist_tables.sql",
         "/fraud_table.sql",

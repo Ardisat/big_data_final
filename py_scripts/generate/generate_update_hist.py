@@ -1,10 +1,10 @@
 def generate_update_hist_sql(hist_table_name, hist_table_fields, stg_table_name, stg_table_fields, date):
 
-    hist_fields = ', '.join(hist_table_fields[:-2])
+    hist_fields = ', '.join(hist_table_fields[:-3])
     stg_id      = stg_table_fields[0]
     hist_id     = hist_table_fields[0]
-    select      = ', '.join(['t1.' + i for i in stg_table_fields]) + f", TO_TIMESTAMP('{date}', 'DD.MM.YYYY')"
-    select_ins  = ', '.join(['t1.' + i for i in stg_table_fields]) + f", TO_TIMESTAMP('{date}', 'DD.MM.YYYY')"
+    select      = ', '.join(['t1.' + i for i in stg_table_fields]) + f", TO_TIMESTAMP('{date}', 'DD.MM.YYYY') effective_from"
+    select_ins  = ', '.join(['t1.' + i for i in stg_table_fields])
 
     where = []
 
@@ -23,7 +23,7 @@ def generate_update_hist_sql(hist_table_name, hist_table_fields, stg_table_name,
     sql = f"""
 update {hist_table_name} 
 set
-    effective_to = TO_TIMESTAMP('{date}', 'DD.MM.YYYY') - interval '1 minute'
+    effective_to = upd.effective_from - interval '1 minute'
 from ( 
     select {select}
     from {stg_table_name} t1

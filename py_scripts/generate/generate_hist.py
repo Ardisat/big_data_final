@@ -2,8 +2,8 @@ def generate_hist_sql(hist_table_name, hist_table_fields, stg_table_name, stg_ta
 
     id     = hist_table_fields[0]
     stg_id = stg_table_fields[0]
-    fields = ', '.join(hist_table_fields[:-2])
-    select = ', '.join(['t1.' + i for i in stg_table_fields]) + f", '{date}'"
+    fields = ', '.join(hist_table_fields[:-3])
+    select = ', '.join(['t1.' + i for i in stg_table_fields])
 
     sql = f'''
 INSERT INTO {hist_table_name} ({fields})
