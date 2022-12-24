@@ -1,9 +1,4 @@
-from py_scripts import DataBase
-from py_scripts import create_tables
-from py_scripts import load_source_data
-from py_scripts import process_data
-from py_scripts import clear_create_stg
-
+from py_scripts import *
 from config import *
 
 
@@ -26,9 +21,10 @@ def main():
         print("Дата:", date)
         print()
 
-        clear_create_stg(db, 'sql_scripts')
-        load_source_data(db, 'data', date)  # загрузка данных их файлов в базу
-        process_data(db, date)              # операции с данными внутри базы
+        clear_create_stg(db, 'sql_scripts')          # очистка STG слоя
+        load_source_data(db, 'data', date)           # загрузка данных их файлов в базу
+        process_data(db, date)                       # операции с данными внутри базы
+        get_frauds(db, date)                         # мошенические операции
  
 
 if __name__ == "__main__":
