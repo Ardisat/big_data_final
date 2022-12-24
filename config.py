@@ -66,19 +66,19 @@ TABLES = {
     'HIST': {
         'ACCOUNTS': {
             'name': f'"{SCHEME}"."{PREFIX}_DWH_DIM_ACCOUNTS_HIST"',
-            'fields': ['account_id', 'valid_to', 'client']
+            'fields': ['account_id', 'valid_to', 'client', 'effective_from', 'effective_to', 'deleted_flg']
         },
         'CARDS': {
             'name': f'"{SCHEME}"."{PREFIX}_DWH_DIM_CARDS_HIST"',
-            'fields': ['card_num', 'account_num']
+            'fields': ['card_num', 'account_num', 'effective_from', 'effective_to', 'deleted_flg']
         },
         'TERMINALS': {
             'name': f'"{SCHEME}"."{PREFIX}_DWH_DIM_TERMINALS_HIST"',
-            'fields': ['terminal_id', 'terminal_type', 'terminal_city', 'terminal_address']
+            'fields': ['terminal_id', 'terminal_type', 'terminal_city', 'terminal_address', 'effective_from', 'effective_to', 'deleted_flg']
         },
         'CLIENTS': {
             'name': f'"{SCHEME}"."{PREFIX}_DWH_DIM_CLIENTS_HIST"',
-            'fields': ['client_id', 'last_name', 'first_name', 'patronymic', 'date_of_birth', 'passport_num', 'passport_valid_to', 'phone']
+            'fields': ['client_id', 'last_name', 'first_name', 'patronymic', 'date_of_birth', 'passport_num', 'passport_valid_to', 'phone', 'effective_from', 'effective_to', 'deleted_flg']
         }
     },
     'META': {
