@@ -9,7 +9,7 @@ def generate_hist_sql(hist_table_name, hist_table_fields, stg_table_name, stg_ta
         INSERT INTO {hist_table_name} ({fields})
         SELECT {select}
         FROM {stg_table_name} t1
-        LEFT JOIN {hist_table_name} t2
+        LEFT JOIN {hist_table_name} t2py_scripts/generate_hist.py
         on t1.{stg_id} = t2.{id}
         where t2.{id} is null;
     '''

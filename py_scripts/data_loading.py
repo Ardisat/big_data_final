@@ -1,6 +1,6 @@
 import pandas as pd
 from config import *
-from py_scripts.generate_insert import generate_sql
+from py_scripts.generate.generate_insert import generate_sql
 
 
 

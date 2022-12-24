@@ -1,5 +1,7 @@
 from config import *
-from py_scripts.generate_hist import generate_hist_sql
+from py_scripts.generate.generate_hist import generate_hist_sql
+from py_scripts.generate.generate_update_hist import generate_update_hist_sql
+from py_scripts.generate.generate_del import generate_del_sql
 
 
 def process_data(db, date):
@@ -13,7 +15,6 @@ def process_data(db, date):
 
         db.post(f"INSERT INTO {stg_del_name} ({id}) select {stg_id} from {stg_name};")
     
-    # Запись данных в hist таблицы
     for table in TABLES['HIST']:
         hist_table_name = TABLES['HIST'][table]['name']
         hist_table_fields = TABLES['HIST'][table]['fields']
@@ -21,6 +22,7 @@ def process_data(db, date):
         stg_table_name = TABLES['STG'][table]['name']
         stg_table_fields = TABLES['STG'][table]['fields']
 
+        # Запись данных в hist таблицы
         hist_sql = generate_hist_sql(
             hist_table_name, 
             hist_table_fields, 
@@ -29,3 +31,25 @@ def process_data(db, date):
             date
         )
         db.post(hist_sql)
+
+        # Обновление данных в детальном слое
+        update_hist_sql = generate_update_hist_sql(
+            hist_table_name, 
+            hist_table_fields, 
+            stg_table_name,
+            stg_table_fields,
+            date
+        )
+        db.post(update_hist_sql)
+
+        # Записываем удаленные записи
+        stg_del_table_name = TABLES['STG_DEL'][table]['name']
+        stg_del_table_fields = TABLES['STG_DEL'][table]['fields']
+
+        del_sql = generate_del_sql(
+            hist_table_name, 
+            hist_table_fields, 
+            stg_del_table_name,
+            stg_del_table_fields
+        )
+        db.post(del_sql)
