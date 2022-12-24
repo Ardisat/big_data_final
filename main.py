@@ -22,7 +22,6 @@ def main():
     for date in dates:
         load_source_data(db, 'data', date)  # загрузка данных их файлов в базу
         process_data(db, date)              # операции с данными внутри базы
-        break
  
 
 if __name__ == "__main__":

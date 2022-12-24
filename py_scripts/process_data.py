@@ -1,8 +1,10 @@
 from config import *
+from Progress import Bar
+
 from py_scripts.generate.generate_hist import generate_hist_sql
 from py_scripts.generate.generate_update_hist import generate_update_hist_sql
 from py_scripts.generate.generate_del import generate_del_sql
-from Progress import Bar
+from py_scripts.generate.generate_old_hist import generate_old_hist_sql
 
 
 def process_data(db, date):
@@ -24,16 +26,21 @@ def process_data(db, date):
     print(
         '4. Запись данных в hist таблицы\n',
         '  Обновление данных в детальном слое\n',
-        '  Записываем удаленные записи',
+        '  Записываем удаленные записи\n',
+        '  Апдейтим старые записи (закрываем актуальность)'
         )
     pb = Bar(len(TABLES['HIST']))
 
     for table in TABLES['HIST']:
+
         hist_table_name = TABLES['HIST'][table]['name']
         hist_table_fields = TABLES['HIST'][table]['fields']
 
         stg_table_name = TABLES['STG'][table]['name']
         stg_table_fields = TABLES['STG'][table]['fields']
+
+        stg_del_table_name = TABLES['STG_DEL'][table]['name']
+        stg_del_table_fields = TABLES['STG_DEL'][table]['fields']
 
         # Запись данных в hist таблицы
         hist_sql = generate_hist_sql(
@@ -56,9 +63,6 @@ def process_data(db, date):
         db.post(update_hist_sql)
 
         # Записываем удаленные записи
-        stg_del_table_name = TABLES['STG_DEL'][table]['name']
-        stg_del_table_fields = TABLES['STG_DEL'][table]['fields']
-
         del_sql = generate_del_sql(
             hist_table_name, 
             hist_table_fields, 
@@ -67,6 +71,16 @@ def process_data(db, date):
         )
         db.post(del_sql)
 
-        pb.next()
+        # Апдейтим старые записи (закрываем актуальность)
+        del_sql = generate_old_hist_sql(
+            hist_table_name, 
+            hist_table_fields, 
+            stg_del_table_name,
+            stg_del_table_fields
+        )
+        db.post(del_sql)
 
+        pb.next()
     print()
+
+    
