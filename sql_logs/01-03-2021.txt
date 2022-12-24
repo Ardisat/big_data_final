@@ -17,7 +17,7 @@ update "p3"."ENV_DWH_DIM_ACCOUNTS_HIST"
 set
     effective_to = TO_TIMESTAMP('01.03.2021', 'DD.MM.YYYY') - interval '1 minute'
 from ( 
-    select t1.account, t1.valid_to, t1.client, '01.03.2021'
+    select t1.account, t1.valid_to, t1.client, TO_TIMESTAMP('01.03.2021', 'DD.MM.YYYY')
     from "p3"."ENV_STG_ACCOUNTS" t1
     inner join "p3"."ENV_DWH_DIM_ACCOUNTS_HIST" t2
     on t1.account = t2.account_id
@@ -28,7 +28,7 @@ where "p3"."ENV_DWH_DIM_ACCOUNTS_HIST".account_id = upd.account;
 
 
 insert into "p3"."ENV_DWH_DIM_ACCOUNTS_HIST" (account_id, valid_to, client, effective_from)
-select t1.account, t1.valid_to, t1.client, '01.03.2021'
+select t1.account, t1.valid_to, t1.client, TO_TIMESTAMP('01.03.2021', 'DD.MM.YYYY')
 from "p3"."ENV_STG_ACCOUNTS" t1
 inner join "p3"."ENV_DWH_DIM_ACCOUNTS_HIST" t2
 on t1.account = t2.account_id
@@ -77,7 +77,7 @@ update "p3"."ENV_DWH_DIM_CARDS_HIST"
 set
     effective_to = TO_TIMESTAMP('01.03.2021', 'DD.MM.YYYY') - interval '1 minute'
 from ( 
-    select t1.card_num, t1.account, '01.03.2021'
+    select t1.card_num, t1.account, TO_TIMESTAMP('01.03.2021', 'DD.MM.YYYY')
     from "p3"."ENV_STG_CARDS" t1
     inner join "p3"."ENV_DWH_DIM_CARDS_HIST" t2
     on t1.card_num = t2.card_num
@@ -87,7 +87,7 @@ where "p3"."ENV_DWH_DIM_CARDS_HIST".card_num = upd.card_num;
 
 
 insert into "p3"."ENV_DWH_DIM_CARDS_HIST" (card_num, account_num, effective_from)
-select t1.card_num, t1.account, '01.03.2021'
+select t1.card_num, t1.account, TO_TIMESTAMP('01.03.2021', 'DD.MM.YYYY')
 from "p3"."ENV_STG_CARDS" t1
 inner join "p3"."ENV_DWH_DIM_CARDS_HIST" t2
 on t1.card_num = t2.card_num
@@ -135,7 +135,7 @@ update "p3"."ENV_DWH_DIM_TERMINALS_HIST"
 set
     effective_to = TO_TIMESTAMP('01.03.2021', 'DD.MM.YYYY') - interval '1 minute'
 from ( 
-    select t1.terminal_id, t1.terminal_type, t1.terminal_city, t1.terminal_address, '01.03.2021'
+    select t1.terminal_id, t1.terminal_type, t1.terminal_city, t1.terminal_address, TO_TIMESTAMP('01.03.2021', 'DD.MM.YYYY')
     from "p3"."ENV_STG_TERMINALS" t1
     inner join "p3"."ENV_DWH_DIM_TERMINALS_HIST" t2
     on t1.terminal_id = t2.terminal_id
@@ -147,7 +147,7 @@ where "p3"."ENV_DWH_DIM_TERMINALS_HIST".terminal_id = upd.terminal_id;
 
 
 insert into "p3"."ENV_DWH_DIM_TERMINALS_HIST" (terminal_id, terminal_type, terminal_city, terminal_address, effective_from)
-select t1.terminal_id, t1.terminal_type, t1.terminal_city, t1.terminal_address, '01.03.2021'
+select t1.terminal_id, t1.terminal_type, t1.terminal_city, t1.terminal_address, TO_TIMESTAMP('01.03.2021', 'DD.MM.YYYY')
 from "p3"."ENV_STG_TERMINALS" t1
 inner join "p3"."ENV_DWH_DIM_TERMINALS_HIST" t2
 on t1.terminal_id = t2.terminal_id
@@ -197,7 +197,7 @@ update "p3"."ENV_DWH_DIM_CLIENTS_HIST"
 set
     effective_to = TO_TIMESTAMP('01.03.2021', 'DD.MM.YYYY') - interval '1 minute'
 from ( 
-    select t1.client_id, t1.last_name, t1.first_name, t1.patronymic, t1.date_of_birth, t1.passport_num, t1.passport_valid_to, t1.phone, '01.03.2021'
+    select t1.client_id, t1.last_name, t1.first_name, t1.patronymic, t1.date_of_birth, t1.passport_num, t1.passport_valid_to, t1.phone, TO_TIMESTAMP('01.03.2021', 'DD.MM.YYYY')
     from "p3"."ENV_STG_CLIENTS" t1
     inner join "p3"."ENV_DWH_DIM_CLIENTS_HIST" t2
     on t1.client_id = t2.client_id
@@ -213,7 +213,7 @@ where "p3"."ENV_DWH_DIM_CLIENTS_HIST".client_id = upd.client_id;
 
 
 insert into "p3"."ENV_DWH_DIM_CLIENTS_HIST" (client_id, last_name, first_name, patronymic, date_of_birth, passport_num, passport_valid_to, phone, effective_from)
-select t1.client_id, t1.last_name, t1.first_name, t1.patronymic, t1.date_of_birth, t1.passport_num, t1.passport_valid_to, t1.phone, '01.03.2021'
+select t1.client_id, t1.last_name, t1.first_name, t1.patronymic, t1.date_of_birth, t1.passport_num, t1.passport_valid_to, t1.phone, TO_TIMESTAMP('01.03.2021', 'DD.MM.YYYY')
 from "p3"."ENV_STG_CLIENTS" t1
 inner join "p3"."ENV_DWH_DIM_CLIENTS_HIST" t2
 on t1.client_id = t2.client_id
