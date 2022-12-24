@@ -10,8 +10,6 @@ from py_scripts.generate.generate_meta import generate_meta_sql
 
 
 def process_data(db, date):
-    logs = ''
-
     # Захват ключей для вычисления удаленных записей
     print('3. Захват ключей для вычисления удаленных записей')
     pb = Bar(len(TABLES['STG_DEL']))
@@ -25,7 +23,6 @@ def process_data(db, date):
 
         sql = f"INSERT INTO {stg_del_name} ({id}) select {stg_id} from {stg_name};"
         db.post(sql)
-        logs += sql + "\n"
         pb.next()
 
     print()
@@ -89,10 +86,6 @@ def process_data(db, date):
         db.post(old_hist_sql)
 
         pb.next()
-        logs += hist_sql + '\n'
-        logs += update_hist_sql + '\n'
-        logs += del_sql + '\n'
-        logs += old_hist_sql + '\n'
     print()
 
     # Загрузка фактов
@@ -117,7 +110,6 @@ def process_data(db, date):
             stg_fields
         )
         db.post(facts_sql)
-        logs += facts_sql + '\n'
         pb.next()
 
     print()
@@ -161,8 +153,3 @@ def process_data(db, date):
         pb.next()
 
     print()
-
-    # Записть логов в файл
-    fname = "-".join(date.split('.'))
-    with open(f'sql_logs/{fname}.txt', 'w') as file:
-        file.write(logs)

@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS "p3"."ENV_STG_PASSPORT_BLACKLIST";
 CREATE TABLE "p3"."ENV_STG_PASSPORT_BLACKLIST" (
     "passport_num" varchar(255) NOT NULL,
-    "entry_dt" DATE NOT NULL
+    "entry_dt" timestamp(6) NOT NULL
 );
 
 DROP TABLE IF EXISTS "p3"."ENV_STG_TERMINALS";
@@ -15,7 +15,7 @@ CREATE TABLE "p3"."ENV_STG_TERMINALS" (
 DROP TABLE IF EXISTS "p3"."ENV_STG_TRANSACTIONS";
 CREATE TABLE "p3"."ENV_STG_TRANSACTIONS" (
     "trans_id" varchar(255) NOT NULL,
-    "trans_date" DATE NOT NULL,
+    "trans_date" timestamp(6) NOT NULL,
     "card_num" varchar(255) NOT NULL,
     "oper_type" varchar(255) NOT NULL,
     "amt" DECIMAL NOT NULL,
