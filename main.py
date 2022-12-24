@@ -24,7 +24,7 @@ def main():
         clear_create_stg(db, 'sql_scripts')          # очистка STG слоя
         load_source_data(db, 'data', date)           # загрузка данных их файлов в базу
         process_data(db, date)                       # операции с данными внутри базы
-        get_frauds(db, date)                         # мошенические операции
+        get_frauds(db, 'sql_scripts', date)          # мошенические операции
  
 
 if __name__ == "__main__":
