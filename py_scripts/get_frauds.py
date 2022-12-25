@@ -4,7 +4,7 @@ def get_frauds(db, sql_folder_name, date):
     print('7. Поиск мошенических операций')
     print()
 
-    types_amount = 2
+    types_amount = 3
 
     pb = Bar(types_amount)
     for i in range(1, types_amount + 1):
