@@ -1,4 +1,4 @@
-transaction_id;transaction_date;amount;card_num;oper_type;oper_result;terminal
+	;transaction_date;amount;card_num;oper_type;oper_result;terminal
 43853694275;2021-03-02 00:00:00;7000,00;4600 5574 2101 5919;DEPOSIT;SUCCESS;A3763
 43853694799;2021-03-02 00:00:02;6487,10;2952 8446 8682 3243;PAYMENT;SUCCESS;P3218
 43853695039;2021-03-02 00:00:08;1079,60;2714 8073 9433 4375;PAYMENT;SUCCESS;P1949

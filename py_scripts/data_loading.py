@@ -1,6 +1,7 @@
 import pandas as pd
 from config import *
 from py_scripts.generate.generate_insert import generate_sql
+import os
 
 
 
@@ -21,6 +22,11 @@ def load_source_data(db, data_folder_name, date):
     df['amount'] = df['amount'].map(comma2dot)
 
     load_to_db(db, df, TABLES['STG']['TRANSACTIONS']['name'])                           # загружаем данные transacions в базу
+
+    os.rename(pbl_path, pbl_path.replace('data', 'archive') + ".backup")
+    os.rename(term_path, term_path.replace('data', 'archive') + ".backup")
+    os.rename(tran_path, tran_path.replace('data', 'archive') + ".backup")
+
     print()
 
 
